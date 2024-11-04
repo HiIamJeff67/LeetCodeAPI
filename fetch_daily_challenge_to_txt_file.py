@@ -120,7 +120,7 @@ def entire_process(
 
 def main():
     # some variable will change along the time
-    _path_to_target_folder: str = "../ExamsAndSolutions2024"
+    _path_to_target_folder: str = "../ExamsAndSolutions2025"
     _question_text_file_name: str = "question.txt"
     _solution_file_types: List[str] = [
         "cpp",
