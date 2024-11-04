@@ -1,0 +1,18 @@
+#include <iostream>
+#include "../../FileReader/cpp/TextFileOperator.h"
+
+using namespace std;
+
+place_your_solution_class_here
+
+int main() {
+    TextFileOperator textFileOperator("question.txt");
+    string questionDescription = textFileOperator.getFileContentString();
+    cout << questionDescription << endl;
+    string questionUrl = "place_your_question_url_here";
+    cout << questionUrl << endl;
+
+    Solution solution = Solution();
+
+    return 0;
+}
