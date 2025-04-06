@@ -1,4 +1,6 @@
 import os
+import argparse
+from datetime import datetime
 from dotenv import load_dotenv
 from typing import *
 from pathlib import Path
@@ -116,6 +118,9 @@ def entire_process(
     question_text_file_name: str = "question.txt",
     solution_file_types: List[str] = ["cpp"],   # place all the type of the solution file which are needed
 ):
+    leetcode_fetcher = LeetCodeQuestionInfoByTitleFetcher \
+        if type(question_search_key_word) is str \
+        else LeetCodeQuestionInfoByFrontendIdFetcher
     setter = QuestionByTitleSetter(
         init_search_key_word=question_search_key_word, 
         fetcher=leetcode_fetcher,
@@ -130,41 +135,51 @@ def entire_process(
 
 
 def main():
+    # get the parameters from arguments
+    parser = argparse.ArgumentParser(description="Fetch LeetCode question by title and generate solution files.")
+    parser.add_argument("--title", type=str, default=None, required=False, help="The title of the LeetCode question.(If not provide, it will use the argument id)")
+    parser.add_argument("--id", type=int, default=1, required=False, help="The question id of the LeetCode question.(Only use this argument when the title is not provide)")
+    parser.add_argument("--path", type=str, default=f"../ExamsAndSolutions{datetime.now().strftime("%Y")}", required=False, help="The path to the target folder.")
+    parser.add_argument("--file_name", type=str, default="question.txt", help="The name of the question text file.")
+    parser.add_argument("--solution_types", type=str, nargs='+', default=["cpp"], help="List of solution file types(a list of used programming languages).")
+    
+    args = parser.parse_args()
+    
     # set this variable to fetch the specific question
-    question_title = "Course Schedule"
-    question_id = 1
+    question_title = args.title
+    question_id = args.id
     
     # some variable will change along the time
-    _path_to_target_folder: str = "../ExamsAndSolutions2024"
-    _question_text_file_name: str = "question.txt"
-    _solution_file_types: List[str] = [
-        "cpp",
-        # "c"
-        # "java",
-        # "python",
-        # "python3",
-        # "csharp",
-        # "javascript",
-        # "typescript",
-        # "php",
-        # "swift",
-        # "kotlin",
-        # "dart",
-        # "golang",
-        # "ruby",
-        # "scala",
-        # "rust",
-        # "racket",
-        # "erlang",
-        # "elixir"
-    ]
+    _path_to_target_folder: str = args.path
+    _question_text_file_name: str = args.file_name
+    _solution_file_types = args.solution_types
+    # all the possible solution file types
+    # "cpp",
+    # "c"
+    # "java",
+    # "python",
+    # "python3",
+    # "csharp",
+    # "javascript",
+    # "typescript",
+    # "php",
+    # "swift",
+    # "kotlin",
+    # "dart",
+    # "golang",
+    # "ruby",
+    # "scala",
+    # "rust",
+    # "racket",
+    # "erlang",
+    # "elixir"
     
     # initially, load our dotenv file
     load_dotenv()
     
     # run the entire process to generate leetcode Exams and Solutions file into new directory
     entire_process(
-        question_search_key_word=question_title,
+        question_search_key_word=question_id if question_title is None else question_title,
         leetcode_fetcher=LeetCodeQuestionInfoByTitleFetcher,
         path_to_target_folder=_path_to_target_folder,
         question_text_file_name=_question_text_file_name,
